@@ -400,9 +400,11 @@
 				TargetAttributes = {
 					3D1E59B31945FFAC001CF760 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0820;
 					};
 					3D1E59BE1945FFAD001CF760 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0820;
 						TestTargetID = 3D1E59B31945FFAC001CF760;
 					};
 					5FB74B901CCB9274009DDBF1 = {
@@ -718,6 +720,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -735,6 +738,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "naoty.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -753,6 +757,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "naoty.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -766,6 +771,7 @@
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "naoty.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1023,6 +1029,7 @@
 				5FB74BA31CCB9274009DDBF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FB74BA71CCB9274009DDBF1 /* Build configuration list for PBXNativeTarget "SwiftCSV OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -1031,6 +1038,7 @@
 				5FB74BA51CCB9274009DDBF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FB74BBE1CCB929D009DDBF1 /* Build configuration list for PBXNativeTarget "SwiftCSV tvOS" */ = {
 			isa = XCConfigurationList;
@@ -1039,6 +1047,7 @@
 				5FB74BC01CCB929D009DDBF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FB74BC11CCB929D009DDBF1 /* Build configuration list for PBXNativeTarget "SwiftCSV tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1047,6 +1056,7 @@
 				5FB74BC31CCB929D009DDBF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FB74BCE1CCB92BA009DDBF1 /* Build configuration list for PBXNativeTarget "SwiftCSV watchOS" */ = {
 			isa = XCConfigurationList;
@@ -1055,6 +1065,7 @@
 				5FB74BD01CCB92BA009DDBF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
