@@ -112,7 +112,7 @@ extension CSV {
             if changeState(char) {
                 break
             }
-            currentIndex = text.index(after: currentIndex)
+			currentIndex = text.index(after: currentIndex)
         }
         
         if fields.count != 0 || field.count != 0 || (doLimit && count < limitTo!) {
