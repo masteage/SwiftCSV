@@ -28,8 +28,8 @@ extension URL {
 	var loadColumns = false
 	var fileFullPath = ""
 	
-	// load
-	func load(filename: String)
+	/// load file
+	public func load(filename: String)
 	{
 		// remove all
 		removeAll()
@@ -41,8 +41,8 @@ extension URL {
 		self.fileFullPath = filename
 	}
 	
-	// save
-	func save() -> Bool
+	/// save file
+	public func save() -> Bool
 	{
 		refreshTextByRow()
 		guard let url = URL(string:fileFullPath), url.fileExists else { return false }
@@ -50,35 +50,59 @@ extension URL {
 		return true
 	}
 	
-	// row count
-	func rowCount() -> Int
+	/// row count
+	public func rowCount() -> Int
 	{
 		return rows.count
 	}
 	
-	// get
-	func get(row: Int, col: Int) -> String
+	/// get
+	public func get(row: Int, col: Int) -> String
 	{
 		return rows[row][header[col]]!
 	}
 	
-	// set String
-	func setString(row: Int, col: Int, val: String)
+	/// get - String
+	public func getString(row: Int, col: Int) -> String
+	{
+		return rows[row][header[col]]!
+	}
+	
+	/// get - String by header
+	public func getStringByHeader(row: Int, col: String) -> String
+	{
+		return rows[row][col]!
+	}
+	
+	/// get - Int
+	public func getInteger(row: Int, col: Int) -> Int
+	{
+		return Int(rows[row][header[col]]!) ?? 0
+	}
+	
+	/// get - Int by header
+	public func getIntegerByHeader(row: Int, col: String) -> Int
+	{
+		return Int(rows[row][col]!) ?? 0
+	}
+	
+	/// set - String
+	public func setString(row: Int, col: Int, val: String)
 	{
 		newElement(row: row, col: col)
 		_rows?[row][header[col]] = val
 	}
 	
-	// set Int
-	func setInteger(row: Int, col: Int, val: Int)
+	/// set - Int
+	public func setInteger(row: Int, col: Int, val: Int)
 	{
 		newElement(row: row, col: col)
 		_rows?[row][header[col]] = String(val)
 	}
 	
-	// sort
-	// - sort by value (string->int)
-	func sort(col: Int)
+	/// sort
+	/// : sort by value (string->int)
+	public func sort(col: Int)
 	{
 		let key = header[col]
 		_rows = rows.sorted(by: {(left:[String:String], right:[String:String]) -> Bool in
@@ -86,16 +110,16 @@ extension URL {
 		})
 	}
 	
-	// remove
-	func removeRow(row: Int)
+	/// remove
+	public func removeRow(row: Int)
 	{
 		_rows?.remove(at: row)
 	}
 	
-	// remove all
-	func removeAll()
+	/// remove all
+	public func removeAll()
 	{
-		header.removeAll()
+		header?.removeAll()
 		_rows?.removeAll()
 		_rows = nil
 		text = ""
@@ -168,6 +192,12 @@ extension URL {
 			self.header = head
 		}
 		enumerateAsArray(createHeader, limitTo: 1, startAt: 0)
+	}
+	
+	/// default init
+	public override init()
+	{
+		super.init()
 	}
 	
     /// Load a CSV file from a string
