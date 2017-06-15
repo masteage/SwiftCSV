@@ -17,13 +17,14 @@ extension URL {
 
 @objc open class CSV : NSObject{
     static fileprivate let comma: Character = ","
+	static fileprivate let dollar: Character = "$"
     
     open var header: [String]!
     var _rows: [[String: String]]? = nil
 //    var _columns: [String: [String]]? = nil
 	
     var text = ""
-    var delimiter = comma
+    var delimiter = dollar
     
 	var loadColumns = false
 	var fileFullPath = ""
@@ -37,16 +38,25 @@ extension URL {
 		// road by filename
 		var contents = ""
 		do{contents = try String(contentsOfFile: filename, encoding: String.Encoding.utf8)} catch{}
-		self.reinit(string: contents, delimiter: CSV.comma, loadColumns: loadColumns)
+		self.reinit(string: contents, delimiter: CSV.dollar, loadColumns: loadColumns)
 		self.fileFullPath = filename
 	}
 	
 	/// save file
+	public func save(filename: String) -> Bool
+	{
+		fileFullPath = filename
+		return save()
+	}
+	
 	public func save() -> Bool
 	{
 		refreshTextByRow()
 		guard let url = URL(string:fileFullPath), url.fileExists else { return false }
 		do{ try text.write(toFile: fileFullPath, atomically: false, encoding: String.Encoding.utf8) } catch { return false }
+//		text = text.replacingOccurrences(of: "\"", with: "\"" + "\"")
+//		do{ try text.write(toFile: fileFullPath, atomically: false, encoding: String.Encoding.utf8) } catch { return false }
+
 		return true
 	}
 	
@@ -54,6 +64,21 @@ extension URL {
 	public func rowCount() -> Int
 	{
 		return rows.count
+	}
+	
+	/// row index
+	public func rowIndex(key: String, value: String) -> Int
+	{
+		var index = 0
+		for row in rows
+		{
+			if(row[key] != nil && row[key] == value )
+			{
+				return index
+			}
+			index += 1
+		}
+		return -1
 	}
 	
 	/// get
@@ -89,14 +114,20 @@ extension URL {
 	/// set - String
 	public func setString(row: Int, col: Int, val: String)
 	{
-		newElement(row: row, col: col)
+		newElement(row: row)
 		_rows?[row][header[col]] = val
+	}
+	
+	public func setStringByHeader(row: Int, col: String, val: String)
+	{
+		newElement(row: row)
+		_rows?[row][col] = val
 	}
 	
 	/// set - Int
 	public func setInteger(row: Int, col: Int, val: Int)
 	{
-		newElement(row: row, col: col)
+		newElement(row: row)
 		_rows?[row][header[col]] = String(val)
 	}
 	
@@ -124,7 +155,7 @@ extension URL {
 		_rows = nil
 		text = ""
 		fileFullPath = ""
-		delimiter = CSV.comma
+		delimiter = CSV.dollar
 //		loadColumns = false
 	}
 	
@@ -138,10 +169,11 @@ extension URL {
 		for key in header
 		{
 			text.append(key)
-			text.append(",")
+			text.append(delimiter)
 		}
 		text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
-		text.append("\r\n")
+//		text.append("\r\n")
+		text.append("\n")
 		
 		// body
 		for row in rows
@@ -154,17 +186,18 @@ extension URL {
 					tempString = row[key]!
 				}
 				text.append(tempString)
-				text.append(",")
+				text.append(delimiter)
 			}
 			text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
-			text.append("\r\n")
+//			text.append("\r\n")
+			text.append("\n")
 		}
 		
-		text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
+//		text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
 	}
 	
 	// new element
-	private func newElement(row: Int, col: Int)
+	private func newElement(row: Int)
 	{
 		// row
 		if( !rows.indices.contains(row) )
@@ -182,7 +215,7 @@ extension URL {
 		}
 	}
 	
-	private func reinit(string: String = "", delimiter: Character = comma, loadColumns: Bool = false)
+	private func reinit(string: String = "", delimiter: Character = dollar, loadColumns: Bool = false)
 	{
 		self.text = string
 		self.delimiter = delimiter
@@ -205,7 +238,7 @@ extension URL {
     /// string: string data of the CSV file
     /// delimiter: character to split row and header fields by (default is ',')
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public init(string: String = "", delimiter: Character = comma, loadColumns: Bool = false) {
+    public init(string: String = "", delimiter: Character = dollar, loadColumns: Bool = false) {
 		
 		super.init()
         self.text = string
@@ -223,7 +256,7 @@ extension URL {
     /// delimiter: character to split row and header fields by (default is ',')
     /// encoding: encoding used to read file (default is NSUTF8StringEncoding)
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public convenience init(name: String, delimiter: Character = comma, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
+    public convenience init(name: String, delimiter: Character = dollar, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
         let contents = try String(contentsOfFile: name, encoding: encoding)
         self.init(string: contents, delimiter: delimiter, loadColumns: loadColumns)
 		self.fileFullPath = name
@@ -235,7 +268,7 @@ extension URL {
     /// delimiter: character to split row and header fields by (default is ',')
     /// encoding: encoding used to read file (default is NSUTF8StringEncoding)
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public convenience init(url: URL, delimiter: Character = comma, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
+    public convenience init(url: URL, delimiter: Character = dollar, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
         let contents = try String(contentsOf: url, encoding: encoding)
         
         self.init(string: contents, delimiter: delimiter, loadColumns: loadColumns)
