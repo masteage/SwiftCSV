@@ -19,7 +19,7 @@ extension URL {
     static fileprivate let comma: Character = ","
 	static fileprivate let dollar: Character = "$"
     
-    open var header: [String]!
+    open var header = [String]()
     var _rows: [[String: String]]? = nil
 //    var _columns: [String: [String]]? = nil
 	
@@ -52,12 +52,14 @@ extension URL {
 	public func save() -> Bool
 	{
 		refreshTextByRow()
-		guard let url = URL(string:fileFullPath), url.fileExists else { return false }
 		do{ try text.write(toFile: fileFullPath, atomically: false, encoding: String.Encoding.utf8) } catch { return false }
-//		text = text.replacingOccurrences(of: "\"", with: "\"" + "\"")
-//		do{ try text.write(toFile: fileFullPath, atomically: false, encoding: String.Encoding.utf8) } catch { return false }
-
 		return true
+	}
+	
+	/// header
+	public func addHeader(header: String)
+	{
+		self.header.append(header)
 	}
 	
 	/// row count
@@ -150,7 +152,7 @@ extension URL {
 	/// remove all
 	public func removeAll()
 	{
-		header?.removeAll()
+		header.removeAll()
 		_rows?.removeAll()
 		_rows = nil
 		text = ""
