@@ -16,6 +16,8 @@ extension URL {
 }
 
 @objc open class CSV : NSObject{
+	static fileprivate let quote: Character = "\""
+	static fileprivate let double_quote: String = "\"\""
     static fileprivate let comma: Character = ","
 	static fileprivate let s_delimiter = comma
 //	static fileprivate let dollar: Character = "$"
@@ -135,6 +137,12 @@ extension URL {
 		_rows?[row][header[col]] = String(val)
 	}
 	
+	public func setIntegerByHeader(row: Int, col: String, val: Int)
+	{
+		newElement(row: row)
+		_rows?[row][col] = String(val)
+	}
+	
 	/// sort
 	/// : sort by value (string->int)
 	public func sort(col: Int)
@@ -142,6 +150,13 @@ extension URL {
 		let key = header[col]
 		_rows = rows.sorted(by: {(left:[String:String], right:[String:String]) -> Bool in
 			Int(left[key]!)! < Int(right[key]!)!
+		})
+	}
+	
+	public func sortByHeader(col: String)
+	{
+		_rows = rows.sorted(by: {(left:[String:String], right:[String:String]) -> Bool in
+			Int(left[col]!)! < Int(right[col]!)!
 		})
 	}
 	
@@ -172,7 +187,9 @@ extension URL {
 		// header
 		for key in header
 		{
+			text.append(CSV.quote)
 			text.append(key)
+			text.append(CSV.quote)
 			text.append(delimiter)
 		}
 		text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
@@ -189,7 +206,10 @@ extension URL {
 				{
 					tempString = row[key]!
 				}
-				text.append(tempString)
+				text.append(CSV.quote)
+//				text.append(tempString)
+				text.append(tempString.replacingOccurrences(of: CSV.quote.description, with: CSV.double_quote))
+				text.append(CSV.quote)
 				text.append(delimiter)
 			}
 			text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
