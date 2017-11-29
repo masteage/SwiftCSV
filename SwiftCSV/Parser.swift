@@ -36,7 +36,10 @@ extension CSV {
 		
 		let changeState: (Character) -> (Bool) = { char in
 			if atStart {
-				if char == self.delimiter {
+				if char == "\"" {
+					atStart = false
+					parsingQuotes = true
+				} else if char == self.delimiter {
 					fields.append(String(field))
 					field = [Character]()
 				} else if CSV.isNewline(char) {
@@ -47,23 +50,37 @@ extension CSV {
 					field.append(char)
 				}
 			} else if parsingField {
-				if char == self.delimiter {
-					atStart = true
-					parsingField = false
-					innerQuotes = false
-					fields.append(String(field))
-					field = [Character]()
-				} else if CSV.isNewline(char) {
-					atStart = true
-					parsingField = false
-					innerQuotes = false
-					callBlock()
+				if innerQuotes {
+					if char == "\"" {
+						field.append(char)
+						innerQuotes = false
+					} else {
+						fatalError("Can't have non-quote here: \(char)")
+					}
 				} else {
-					field.append(char)
+					if char == "\"" {
+						innerQuotes = true
+					} else if char == self.delimiter {
+						atStart = true
+						parsingField = false
+						innerQuotes = false
+						fields.append(String(field))
+						field = [Character]()
+					} else if CSV.isNewline(char) {
+						atStart = true
+						parsingField = false
+						innerQuotes = false
+						callBlock()
+					} else {
+						field.append(char)
+					}
 				}
 			} else if parsingQuotes {
 				if innerQuotes {
-					if char == self.delimiter {
+					if char == "\"" {
+						field.append(char)
+						innerQuotes = false
+					} else if char == self.delimiter {
 						atStart = true
 						parsingField = false
 						innerQuotes = false
@@ -78,7 +95,11 @@ extension CSV {
 						fatalError("Can't have non-quote here: \(char)")
 					}
 				} else {
-					field.append(char)
+					if char == "\"" {
+						innerQuotes = true
+					} else {
+						field.append(char)
+					}
 				}
 			} else {
 				fatalError("me_irl")

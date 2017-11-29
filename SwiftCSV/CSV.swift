@@ -17,14 +17,16 @@ extension URL {
 
 @objc open class CSV : NSObject{
     static fileprivate let comma: Character = ","
-	static fileprivate let dollar: Character = "$"
-    
+	static fileprivate let s_delimiter = comma
+//	static fileprivate let dollar: Character = "$"
+//	static fileprivate let s_delimiter = dollar
+	
     open var header = [String]()
     var _rows: [[String: String]]? = nil
 //    var _columns: [String: [String]]? = nil
 	
     var text = ""
-    var delimiter = dollar
+    var delimiter = s_delimiter
     
 	var loadColumns = false
 	var fileFullPath = ""
@@ -38,7 +40,7 @@ extension URL {
 		// road by filename
 		var contents = ""
 		do{contents = try String(contentsOfFile: filename, encoding: String.Encoding.utf8)} catch{}
-		self.reinit(string: contents, delimiter: CSV.dollar, loadColumns: loadColumns)
+		self.reinit(string: contents, delimiter: delimiter, loadColumns: loadColumns)
 		self.fileFullPath = filename
 	}
 	
@@ -157,7 +159,7 @@ extension URL {
 		_rows = nil
 		text = ""
 		fileFullPath = ""
-		delimiter = CSV.dollar
+		delimiter = CSV.s_delimiter
 //		loadColumns = false
 	}
 	
@@ -217,7 +219,7 @@ extension URL {
 		}
 	}
 	
-	private func reinit(string: String = "", delimiter: Character = dollar, loadColumns: Bool = false)
+	private func reinit(string: String = "", delimiter: Character = s_delimiter, loadColumns: Bool = false)
 	{
 		self.text = string
 		self.delimiter = delimiter
@@ -240,7 +242,7 @@ extension URL {
     /// string: string data of the CSV file
     /// delimiter: character to split row and header fields by (default is ',')
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public init(string: String = "", delimiter: Character = dollar, loadColumns: Bool = false) {
+    public init(string: String = "", delimiter: Character = s_delimiter, loadColumns: Bool = false) {
 		
 		super.init()
         self.text = string
@@ -258,7 +260,7 @@ extension URL {
     /// delimiter: character to split row and header fields by (default is ',')
     /// encoding: encoding used to read file (default is NSUTF8StringEncoding)
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public convenience init(name: String, delimiter: Character = dollar, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
+    public convenience init(name: String, delimiter: Character = s_delimiter, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
         let contents = try String(contentsOfFile: name, encoding: encoding)
         self.init(string: contents, delimiter: delimiter, loadColumns: loadColumns)
 		self.fileFullPath = name
@@ -270,7 +272,7 @@ extension URL {
     /// delimiter: character to split row and header fields by (default is ',')
     /// encoding: encoding used to read file (default is NSUTF8StringEncoding)
     /// loadColumns: whether to populate the columns dictionary (default is true)
-    public convenience init(url: URL, delimiter: Character = dollar, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
+    public convenience init(url: URL, delimiter: Character = s_delimiter, encoding: String.Encoding = String.Encoding.utf8, loadColumns: Bool = false) throws {
         let contents = try String(contentsOf: url, encoding: encoding)
         
         self.init(string: contents, delimiter: delimiter, loadColumns: loadColumns)
@@ -280,4 +282,10 @@ extension URL {
     open func dataUsingEncoding(_ encoding: String.Encoding) -> Data? {
         return description.data(using: encoding)
     }
+	
+	deinit
+	{
+		// remove all
+		removeAll()
+	}
 }
