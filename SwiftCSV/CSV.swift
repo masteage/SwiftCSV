@@ -66,6 +66,34 @@ extension URL {
 		self.header.append(header)
 	}
 	
+	public func existHeader(header: String) -> Bool{
+		return self.header.contains(header)
+	}
+	
+	public func indexByHeader(header: String) -> Int
+	{
+		var index = 0
+		for tmp in self.header {
+			if(header == tmp) {
+				return index
+			}
+			index += 1
+		}
+		return -1
+	}
+	
+	public func headerByIndex(index: Int) -> String
+	{
+		var count = 0
+		for tmp in self.header {
+			if(count == index) {
+				return tmp
+			}
+			count += 1
+		}
+		return ""
+	}
+	
 	/// row count
 	public func rowCount() -> Int
 	{
