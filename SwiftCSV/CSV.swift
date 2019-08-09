@@ -230,14 +230,14 @@ extension URL {
 			for key in header
 			{
 				var tempString = ""
-				if( row[key] != nil )
-				{
+				if( row[key] != nil ){
 					tempString = row[key]!
 				}
-				text.append(CSV.quote)
-//				text.append(tempString)
-				text.append(tempString.replacingOccurrences(of: CSV.quote.description, with: CSV.double_quote))
-				text.append(CSV.quote)
+				if tempString != "" {
+					text.append(CSV.quote)
+					text.append(tempString.replacingOccurrences(of: CSV.quote.description, with: CSV.double_quote))
+					text.append(CSV.quote)
+				}
 				text.append(delimiter)
 			}
 			text = text.substring(to: text.index(text.endIndex, offsetBy: -1))
